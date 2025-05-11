@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.25;
 
 import {ITeleporterMessenger, TeleporterMessageInput, TeleporterFeeInfo} from "icm-contracts/teleporter/ITeleporterMessenger.sol";
 import {ITeleporterReceiver} from "icm-contracts/teleporter/ITeleporterReceiver.sol";
@@ -10,9 +10,27 @@ import {ITeleporterReceiver} from "icm-contracts/teleporter/ITeleporterReceiver.
  * @notice
  */
 abstract contract CrossChainMessager {
-    event ReceivedMessage(
+    event SendingMessage(
         bytes32 indexed destinationBlockchainID,
         address indexed destinationAddress,
+        string message
+    );
+
+    event SentMessage(
+        bytes32 indexed destinationBlockchainID,
+        address indexed destinationAddress,
+        string message
+    );
+
+    event ReceivingMessage(
+        bytes32 indexed sourceBlockchainID,
+        address indexed sourceAddress,
+        uint256 messageSize
+    );
+
+    event ReceivedMessage(
+        bytes32 indexed sourceBlockchainID,
+        address indexed sourceAddress,
         string message
     );
 
@@ -34,6 +52,12 @@ abstract contract CrossChainMessager {
         address destinationAddress,
         string calldata message
     ) external {
+        emit SendingMessage(
+            destinationBlockchainID,
+            destinationAddress,
+            message
+        );
+
         messenger.sendCrossChainMessage(
             TeleporterMessageInput({
                 destinationBlockchainID: destinationBlockchainID,
@@ -47,6 +71,8 @@ abstract contract CrossChainMessager {
                 message: abi.encode(message)
             })
         );
+
+        emit SentMessage(destinationBlockchainID, destinationAddress, message);
     }
 
     function receiveTeleporterMessage(
@@ -58,6 +84,12 @@ abstract contract CrossChainMessager {
         require(
             msg.sender == address(messenger),
             "ReceiverOnSubnet: unauthorized TeleporterMessenger"
+        );
+
+        emit ReceivingMessage(
+            sourceBlockchainID,
+            sourceAddress,
+            message.length
         );
 
         // Store the message.

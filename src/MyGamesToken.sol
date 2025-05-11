@@ -9,7 +9,7 @@ import {CrossChainMessager} from "./CrossChainMessager.sol";
  * @author Mr.James W
  * @notice
  */
-contract MyGamesToken1 is ERC20, CrossChainMessager {
+contract MyGamesToken is ERC20, CrossChainMessager {
     constructor(
         address messagerAddress,
         uint256 initialSupply

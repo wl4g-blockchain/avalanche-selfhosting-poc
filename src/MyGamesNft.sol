@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.25;
 
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {ERC721} from "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
@@ -10,27 +10,32 @@ import {CrossChainMessager} from "./CrossChainMessager.sol";
  * @author Mr.James W
  * @notice
  */
-contract MyGamesNft1 is ERC721, CrossChainMessager {
+contract MyGamesNft is ERC721, CrossChainMessager {
     uint256 id;
     constructor(
         address messagerAddress
-    ) ERC721("Token", "MyGamesNft1") CrossChainMessager(messagerAddress) {}
+    ) ERC721("Token", "MyGamesNft") CrossChainMessager(messagerAddress) {}
 
     function mint(address to) public returns (uint256) {
         id += 1;
         _mint(to, id);
+        return id;
+    }
 
-        string memory mintMsg = string(
+    function notification(
+        bytes32 destinationBlockchainID,
+        address destinationAddress
+    ) public returns (uint256) {
+        string memory message = string(
             abi.encodePacked(
-                "Hello, minted MyGamesNft1 is ",
+                "Hello, MyGamesNft minted current ID is ",
                 Strings.toString(id)
             )
         );
         this.sendTeleportMessage(
-            0xb72b346fcc8c1ebb30087e2d2841eac9302dde8fc5969dcc84fad6db5ebd261d,
-            // TODO destinationAddress
-            0x0000000000000000000000000000000000000000,
-            mintMsg
+            destinationBlockchainID,
+            destinationAddress,
+            message
         );
 
         return id;
