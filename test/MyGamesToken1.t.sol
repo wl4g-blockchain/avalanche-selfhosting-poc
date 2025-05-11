@@ -2,15 +2,15 @@
 pragma solidity ^0.8.13;
 
 import {Test, console} from "forge-std/Test.sol";
-import {MyGamesToken} from "../src/MyGamesToken.sol";
+import {MyGamesToken1} from "../src/MyGamesToken1.sol";
 
 /**
  * @title
  * @author Mr.James W
  * @notice
  */
-contract MyTokenTest is Test {
-    MyGamesToken token;
+contract MyGamesToken1Test is Test {
+    MyGamesToken1 token;
     address deployer = address(0x123);
     address user1 = address(0x456);
     address user2 = address(0x789);
@@ -20,7 +20,9 @@ contract MyTokenTest is Test {
         vm.prank(deployer);
 
         // Deploy the token contract with an initial supply of 1,000,000 tokens
-        token = new MyGamesToken(1000000);
+        // TODO messager address
+        // e.g: cat ~/.avalanche-cli/bin/icm-contracts/v1.0.0/TeleporterMessenger_Contract_Address_v1.0.0.txt
+        token = new MyGamesToken1(0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf, 1000000);
     }
 
     function testInitialSupply() public {
