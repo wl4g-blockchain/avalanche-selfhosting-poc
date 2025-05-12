@@ -22,7 +22,7 @@ contract MyGamesTokenTest is Test {
         // Deploy the token contract with an initial supply of 1,000,000 tokens
         // TODO messager address
         // e.g: cat ~/.avalanche-cli/bin/icm-contracts/v1.0.0/TeleporterMessenger_Contract_Address_v1.0.0.txt
-        token = new MyGamesToken(0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf, 1000000);
+        token = new MyGamesToken(1000000);
     }
 
     function testInitialSupply() public view {

@@ -12,4 +12,4 @@
 
 ## Quick Start
 
-- [Full Deployment and Verification Guide](./docs/Full-Deploy-and-Verify.md)
+- [Deployment Avalanche L1 Chain-1 and Transfer Token and Mint NFT Guide](./docs/1.Deploy-Chain-1-and-Transfer-Token-and-Mint-NFT.md)

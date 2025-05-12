@@ -16,9 +16,7 @@ contract DeployMyGamesNft is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        // TODO messager address
-        // e.g: cat ~/.avalanche-cli/bin/icm-contracts/v1.0.0/TeleporterMessenger_Contract_Address_v1.0.0.txt
-        nft = new MyGamesNft(0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf);
+        nft = new MyGamesNft();
 
         vm.stopBroadcast();
     }

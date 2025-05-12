@@ -2,26 +2,23 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
-import {MyGamesToken} from "../src/MyGamesToken.sol";
+import {CrossChainMessager} from "../src/CrossChainMessager.sol";
 
 /**
  * @title
  * @author Mr.James W
  * @notice
  */
-contract DeployMyGamesToken is Script {
-    MyGamesToken public token;
+contract DeployCrossChainMessager is Script {
+    CrossChainMessager public messager;
 
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        // TODO messager address
+        // Notice: Obtaining the messager address
         // e.g: cat ~/.avalanche-cli/bin/icm-contracts/v1.0.0/TeleporterMessenger_Contract_Address_v1.0.0.txt
-        token = new MyGamesToken(
-            0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf,
-            1000000
-        ); // Initial supply of 1,000,000 tokens
+        messager = new CrossChainMessager(0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf);
 
         vm.stopBroadcast();
     }
