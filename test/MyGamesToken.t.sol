@@ -10,6 +10,7 @@ import {MyGamesToken} from "../src/MyGamesToken.sol";
  * @notice
  */
 contract MyGamesTokenTest is Test {
+    uint256 initialSupply = 10000000 * 10 ** 18;
     MyGamesToken token;
     address deployer = address(0x123);
     address user1 = address(0x456);
@@ -22,7 +23,7 @@ contract MyGamesTokenTest is Test {
         // Deploy the token contract with an initial supply of 1,000,000 tokens
         // TODO messager address
         // e.g: cat ~/.avalanche-cli/bin/icm-contracts/v1.0.0/TeleporterMessenger_Contract_Address_v1.0.0.txt
-        token = new MyGamesToken(1000000);
+        token = new MyGamesToken(initialSupply);
     }
 
     function testInitialSupply() public view {
@@ -30,7 +31,7 @@ contract MyGamesTokenTest is Test {
         uint256 deployerBalance = token.balanceOf(deployer);
         assertEq(
             deployerBalance,
-            1000000,
+            initialSupply,
             "Deployer should have the initial supply"
         );
     }
@@ -48,7 +49,7 @@ contract MyGamesTokenTest is Test {
 
         assertEq(
             deployerBalance,
-            1000000 - 200,
+            initialSupply - 200,
             "Deployer balance should decrease by 200"
         );
         assertEq(user1Balance, 200, "User1 should receive 200 tokens");
