@@ -10,6 +10,14 @@
 - [ ] Tell message to Self-Hosting Avalanche L1 `MyGames2` from `MyGames1` based on `ICM/AWM(Teleporter)`.
 - [ ] Cross transfer `MyGamesNft` or `MyGamesToken` assets to Self-Hosting Avalanche L1 `MyGames2` from Self-Hosting Avalanche L1 `MyGames1` (Planning).
 
-## Quick Start
+## Quick start User Cases
 
-- [Deployment Avalanche L1 Chain-1 and Transfer Token and Mint NFT Guide](./docs/1.Deploy-Chain-1-and-Transfer-Token-and-Mint-NFT.md)
+- [Deployment Avalanche L1 Chain-1 and Transfer Token and Mint NFT Guide](./docs/1.Deploy-L1-and-Mint-NFT-and-Transfer-Token.md)
+
+## FAQ
+
+### How to build custom Avalanche Localnet base image?
+
+```bash
+./build.sh
+```

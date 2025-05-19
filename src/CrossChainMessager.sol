@@ -9,7 +9,7 @@ import {ITeleporterReceiver} from "icm-contracts/teleporter/ITeleporterReceiver.
  * @author Mr.James W
  * @notice
  */
-contract CrossChainMessager {
+contract CrossChainMessager is ITeleporterReceiver {
     event SendingMessage(
         bytes32 indexed destinationBlockchainID,
         address indexed destinationAddress,

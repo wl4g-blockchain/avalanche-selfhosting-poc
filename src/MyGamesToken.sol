@@ -9,7 +9,7 @@ import "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
  * @notice
  */
 contract MyGamesToken is ERC20 {
-    constructor(uint256 initialSupply) ERC20("Token", "MG") {
+    constructor(uint256 initialSupply) ERC20("Token", "MGT") {
         _mint(msg.sender, initialSupply);
     }
 }
