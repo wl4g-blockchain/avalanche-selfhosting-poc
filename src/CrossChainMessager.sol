@@ -7,7 +7,7 @@ import {ITeleporterReceiver} from "icm-contracts/teleporter/ITeleporterReceiver.
 /**
  * @title
  * @author Mr.James W
- * @notice
+ * @notice see:https://build.avax.network/academy/interchain-messaging/04-icm-basics/04-create-sender-contract
  */
 contract CrossChainMessager is ITeleporterReceiver {
     event SendingMessage(

@@ -1,0 +1,167 @@
+
+=== Deploy avalanche local network ===
+
+docker run -d \
+--name avalanche-localnet \
+--restart unless-stopped \
+--network host \
+--entrypoint bash registry.cn-shenzhen.aliyuncs.com/wl4g/avalanche-local-base:v1.13.0 \
+-c 'tail -f /dev/null'
+
+# Enter the container.
+docker exec -ti avalanche-localnet bash
+
+
+avalanche-cli blockchain create mygames1 --evm --latest --evm-chain-id 43113001 --evm-token MYG1 --evm-defaults
+avalanche-cli blockchain create mygames2 --evm --latest --evm-chain-id 43113002 --evm-token MYG1 --evm-defaults
+
+avalanche-cli blockchain describe mygames1
+avalanche-cli blockchain describe mygames2
+
+curl -X POST --data '{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "platform.getBlockchains"
+}' -H 'content-type: application/json' http://localhost:9650/ext/bc/P
+#{"jsonrpc":"2.0","result":{"blockchains":[{"id":"YL2K4mYBGGfpopSvNihsm58jhBL8Q8ZFwkjcfRDdqggMWkF1Q","name":"mygames1","subnetID":"2W9boARgCWL25z6pMFNtkCfNA5v28VGg9PmBgUJfuKndEdhrvw","vmID":"qDNbeu87sHXfCs4PaQSN2dGdkb843nxvxg2HBj4mkfZZQE4tc"},{"id":"2Rc81C5w3jnK9c5DbV59QXtHhUVFz4i83v6av4q1VtKejAArC3","name":"mygames1","subnetID":"28gzBJwZRKmzKdHZxnzbLaiABnKMHDcq2Aoazam9mmByniXsgx","vmID":"qDNbeu87sHXfCs4PaQSN2dGdkb843nxvxg2HBj4mkfZZQE4tc"},{"id":"2PisherAdpKfiLzSVgzHePNs32sKLSx8tdLZYtd1gf9364dGRD","name":"mygames2","subnetID":"YzJJaeoVBShPGk5mKastVqVk2tBh2ZxcX2rdfYkQp42SSx6S","vmID":"qDNbeu87sHaHvNBDN8K2epBvD7WAziU1hkMFCN8zFZoicnjjy"},{"id":"5T24nSPnQ4WWiW5uC3SLYovGVRTNK9GRxXdHH5AoShGp1bR71","name":"C-Chain","subnetID":"11111111111111111111111111111111LpoYY","vmID":"mgj786NP7uDwBCcq6YwThhaN8FLyybkCa4zBWTQbNgmK6k9A6"},{"id":"2XYkjHB237QcS4SjzuZZekcpFXXQDXYdVg7zqdwURV78XQcu3C","name":"X-Chain","subnetID":"11111111111111111111111111111111LpoYY","vmID":"jvYyfQTxGMJLuGWa55kdP2p2zSUYsQ5Raupu4TW34ZAUBAbtq"}]},"id":1}
+
+
+=== Operation for Demo ===
+
+export TEST_ACCOUNT_KEY_1="0x7bf00a22957531afd8cd99caf21c2090967a42cf2d26a03dfb55ec2dcc2ee118"
+export TEST_ACCOUNT_ADDR_1="0x9B3B36bc9Cc6a128937870714A8b856B71773914"
+export TEST_ACCOUNT_KEY_2="0x35d52577ec6854a324e20dd7de5ca1e4b7c34f9b073b518b23c54857e8ee4010"
+export TEST_ACCOUNT_ADDR_2="0xf7Ba3B240C66A62deA538C8B5FbE7b081Ddf2b5F"
+export INIT_ACCOUNT_KEY_1="0x526731a64161e9f137541790145a0e83a6f1ffa93505600d05c37556dc105c48"
+export INIT_ACCOUNT_ADDR_1="0xE61Dbb187c168CB8804CCb09C163Af42Ddbd33bC"
+export INIT_ACCOUNT_KEY_2="0x2c87aa5f0e7ebfe37d235d916515662cb84908f3ebfb70507c346eebe7f5191b"
+export INIT_ACCOUNT_ADDR_2="0xB1626868bAF0ab9d0256d56a782Fc1a3F0284774"
+# export PRIVATE_KEY="${TEST_ACCOUNT_KEY_1}"
+export PRIVATE_KEY="${INIT_ACCOUNT_KEY_1}"
+# export PRIVATE_KEY="${INIT_ACCOUNT_KEY_2}"
+
+export CHAIN_ID_1=43113001
+export CHAIN_ID_2=43113002
+export CHAIN_RPC_URL_1='http://127.0.0.1:37845/ext/bc/2Rc81C5w3jnK9c5DbV59QXtHhUVFz4i83v6av4q1VtKejAArC3/rpc'
+export CHAIN_RPC_URL_2='http://127.0.0.1:37241/ext/bc/2PisherAdpKfiLzSVgzHePNs32sKLSx8tdLZYtd1gf9364dGRD/rpc'
+
+
+=== Native Token Transfer ===
+
+cast send \
+--rpc-url ${CHAIN_RPC_URL_1} \
+--chain=43113001 \
+--private-key ${INIT_ACCOUNT_KEY_1} \
+--from ${INIT_ACCOUNT_ADDR_1} \
+--value 5000ether \
+${TEST_ACCOUNT_ADDR_1}
+
+cast balance \
+--rpc-url ${CHAIN_RPC_URL_1} \
+${TEST_ACCOUNT_ADDR_1}
+
+
+
+cast send \
+--rpc-url ${CHAIN_RPC_URL_2} \
+--chain=43113002 \
+--private-key ${INIT_ACCOUNT_KEY_2} \
+--from ${INIT_ACCOUNT_ADDR_2} \
+--value 5500ether \
+${TEST_ACCOUNT_ADDR_2}
+
+cast balance \
+--rpc-url ${CHAIN_RPC_URL_2} \
+${TEST_ACCOUNT_ADDR_2}
+
+
+
+=== Deploy Contract ===
+
+
+forge script script/DeployMyGamesNft.s.sol:DeployMyGamesNft --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_1} --broadcast -vvvv
+#Contract Address: 0x8f6cbDEbBd47A0cbEF61d311aD46Be184772a483
+
+forge script script/DeployMyGamesNft.s.sol:DeployMyGamesNft --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
+#Contract Address: 0x089e8B4F937887f3726e52D7e32254AAeA19Eb4d
+
+forge script script/DeployMyGamesToken.s.sol:DeployMyGamesToken --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_1} --broadcast -vvvv
+#Contract Address: 0x4147b19c5E1ce4Fe5676318f82980E65b98beC19
+
+forge script script/DeployMyGamesToken.s.sol:DeployMyGamesToken --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
+#Contract Address: 0xDEc13a4dbbeAe1404c0d4CD6fcacBF2af0d5B6AE
+
+
+
+=== Mint NFT ====
+
+cast send \
+--private-key=${PRIVATE_KEY} \
+--rpc-url=${CHAIN_RPC_URL_1} \
+--chain=43113001 \
+--legacy \
+0x8f6cbDEbBd47A0cbEF61d311aD46Be184772a483 \
+"mint(address)" "${TEST_ACCOUNT_ADDR_1}"
+
+
+
+=== Transfer ERC20 Token ===
+
+cast send \
+--private-key=${PRIVATE_KEY} \
+--rpc-url=${CHAIN_RPC_URL_1} \
+--chain=43113001 \
+--legacy \
+0x4147b19c5E1ce4Fe5676318f82980E65b98beC19 \
+"transfer(address,uint256)" "${TEST_ACCOUNT_ADDR_2}" 200000000000000000000
+
+
+cast call \
+--rpc-url=${CHAIN_RPC_URL_1} \
+0x4147b19c5E1ce4Fe5676318f82980E65b98beC19 \
+"balanceOf(address)(uint256)" \
+"${TEST_ACCOUNT_ADDR_2}"
+#200000000000000000000
+
+
+=== Cross message ====
+
+forge script script/DeployCrossChainMessager.s.sol:DeployCrossChainMessager --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_1} --broadcast -vvvv
+#Contract Address: 0xAFE3a8563bd3D4D238811F55dA01d03eB664bA3f
+forge script script/DeployCrossChainMessager.s.sol:DeployCrossChainMessager --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
+#Contract Address: 0xc8d9297aD06812a4644A84fA457eeAF23bFEa1a7
+
+
+## 注：为什么使用 avalanche-cli 的 teleporter 子命令测试跨链发送后，再用 cast send 命令发送跨链消息就成功了？？？
+avalanche-cli teleporter sendMsg mygames1 mygames2 "Hello 101" --destination-address 0xc8d9297aD06812a4644A84fA457eeAF23bFEa1a7 --local
+
+
+cast send \
+--private-key ${INIT_ACCOUNT_KEY_1} \
+--rpc-url ${CHAIN_RPC_URL_1} \
+0xAFE3a8563bd3D4D238811F55dA01d03eB664bA3f \
+"sendTeleportMessage(bytes32,address,string)" 0xb74a02b2e99c3a9496b3d452b634ad724bb27ed67a5d4290569653b70dc24faa 0xc8d9297aD06812a4644A84fA457eeAF23bFEa1a7 "Hello 101"
+
+
+# ICM-Relayer Initializing Cross chains logs:
+#{"level":"info","timestamp":"2025-05-20T20:34:43.313+0800","logger":"icm-relayer","caller":"main/main.go:555","msg":"Created application relayer","relayerID":"0xf28acaffc0469a0db1e169c9a61aaa5fcaf5724e43ea917d08b08cf1e319b7cc","sourceBlockchainID":"5T24nSPnQ4WWiW5uC3SLYovGVRTNK9GRxXdHH5AoShGp1bR71","destinationBlockchainID":"5T24nSPnQ4WWiW5uC3SLYovGVRTNK9GRxXdHH5AoShGp1bR71","originSenderAddress":"0x0000000000000000000000000000000000000000","destinationAddress":"0x0000000000000000000000000000000000000000"}
+#{"level":"info","timestamp":"2025-05-20T20:34:43.313+0800","logger":"icm-relayer","caller":"checkpoint/checkpoint.go:40","msg":"Creating checkpoint manager","relayerID":"0x68857375c0e0938a8a29aaf10deb1287299d8d625a1a1b9766dbbcf8bcc2fcf3","startingHeight":7}
+#{"level":"info","timestamp":"2025-05-20T20:34:43.313+0800","logger":"icm-relayer","caller":"main/main.go:555","msg":"Created application relayer","relayerID":"0x68857375c0e0938a8a29aaf10deb1287299d8d625a1a1b9766dbbcf8bcc2fcf3","sourceBlockchainID":"5T24nSPnQ4WWiW5uC3SLYovGVRTNK9GRxXdHH5AoShGp1bR71","destinationBlockchainID":"2Rc81C5w3jnK9c5DbV59QXtHhUVFz4i83v6av4q1VtKejAArC3","originSenderAddress":"0x0000000000000000000000000000000000000000","destinationAddress":"0x0000000000000000000000000000000000000000"}
+#{"level":"info","timestamp":"2025-05-20T20:34:43.313+0800","logger":"icm-relayer","caller":"checkpoint/checkpoint.go:40","msg":"Creating checkpoint manager","relayerID":"0xb6bc7f0e4375d28a9c55519a7dff17c53d1826e2aa1a0bca8d955025536d786e","startingHeight":7}
+#{"level":"info","timestamp":"2025-05-20T20:34:43.314+0800","logger":"icm-relayer","caller":"main/main.go:555","msg":"Created application relayer","relayerID":"0xb6bc7f0e4375d28a9c55519a7dff17c53d1826e2aa1a0bca8d955025536d786e","sourceBlockchainID":"5T24nSPnQ4WWiW5uC3SLYovGVRTNK9GRxXdHH5AoShGp1bR71","destinationBlockchainID":"2PisherAdpKfiLzSVgzHePNs32sKLSx8tdLZYtd1gf9364dGRD","originSenderAddress":"0x0000000000000000000000000000000000000000","destinationAddress":"0x0000000000000000000000000000000000000000"}
+#{"level":"info","timestamp":"2025-05-20T20:34:43.314+0800","logger":"icm-relayer","caller":"main/main.go:456","msg":"Created application relayers","blockchainID":"5T24nSPnQ4WWiW5uC3SLYovGVRTNK9GRxXdHH5AoShGp1bR71"}
+#{"level":"info","timestamp":"2025-05-20T20:34:43.317+0800","logger":"icm-relayer","caller":"main/main.go:555","msg":"Created application relayer","relayerID":"0x242f16422b6d909e050a43cbcbcd65c857d7e4bc6d14a592fd0a4621988cfda6","sourceBlockchainID":"2Rc81C5w3jnK9c5DbV59QXtHhUVFz4i83v6av4q1VtKejAArC3","destinationBlockchainID":"2Rc81C5w3jnK9c5DbV59QXtHhUVFz4i83v6av4q1VtKejAArC3","originSenderAddress":"0x0000000000000000000000000000000000000000","destinationAddress":"0x0000000000000000000000000000000000000000"}
+#{"level":"info","timestamp":"2025-05-20T20:34:43.318+0800","logger":"icm-relayer","caller":"checkpoint/checkpoint.go:40","msg":"Creating checkpoint manager","relayerID":"0x3719c0eba6fcae24b3eca5ccd496b0f9e3070cd5a72ee0fed754e8f0ff5b4f95","startingHeight":25}
+#{"level":"info","timestamp":"2025-05-20T20:34:43.318+0800","logger":"icm-relayer","caller":"main/main.go:555","msg":"Created application relayer","relayerID":"0x3719c0eba6fcae24b3eca5ccd496b0f9e3070cd5a72ee0fed754e8f0ff5b4f95","sourceBlockchainID":"2Rc81C5w3jnK9c5DbV59QXtHhUVFz4i83v6av4q1VtKejAArC3","destinationBlockchainID":"2PisherAdpKfiLzSVgzHePNs32sKLSx8tdLZYtd1gf9364dGRD","originSenderAddress":"0x0000000000000000000000000000000000000000","destinationAddress":"0x0000000000000000000000000000000000000000"}
+#{"level":"info","timestamp":"2025-05-20T20:34:43.318+0800","logger":"icm-relayer","caller":"checkpoint/checkpoint.go:40","msg":"Creating checkpoint manager","relayerID":"0x3ae967210bfd519e9ac9fd4b2f5ee4f39bc12d8dc65b6c441861d9a740d00872","startingHeight":25}
+
+# ICM-Relayer Delivered logs:
+#{"level":"info","timestamp":"2025-05-21T00:36:50.785+0800","logger":"icm-relayer","caller":"teleporter/message_handler.go:313","msg":"Delivered message to destination chain","warpMessageID":"2FVPN5upkc5zQZiPUhLc6mDW8W2DRZBndTQHNHitgSYmgVztQD","teleporterMessageID":"273nawiyS8spPEJFvMhNX9AoYLZpmqv2n81k2FsrRemQT59XEu","destinationBlockchainID":"2PisherAdpKfiLzSVgzHePNs32sKLSx8tdLZYtd1gf9364dGRD","txHash":"0x7d1a22084d15ef179946d291c33344c6308c8d951db05013f0f1dca55ff0b26e"}
+#{"level":"info","timestamp":"2025-05-21T00:36:50.785+0800","logger":"icm-relayer","caller":"relayer/application_relayer.go:275","msg":"Finished relaying message to destination chain","relayerID":"0x3719c0eba6fcae24b3eca5ccd496b0f9e3070cd5a72ee0fed754e8f0ff5b4f95","destinationBlockchainID":"2PisherAdpKfiLzSVgzHePNs32sKLSx8tdLZYtd1gf9364dGRD","txHash":"0x7d1a22084d15ef179946d291c33344c6308c8d951db05013f0f1dca55ff0b26e"}
+
+
+
+cast call \
+--rpc-url ${CHAIN_RPC_URL_2} \
+0xc8d9297aD06812a4644A84fA457eeAF23bFEa1a7 "lastMessage()(string)"
+#"Hello 102"
