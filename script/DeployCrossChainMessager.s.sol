@@ -18,7 +18,9 @@ contract DeployCrossChainMessager is Script {
 
         // Notice: Obtaining the messager address
         // e.g: cat ~/.avalanche-cli/bin/icm-contracts/v1.0.0/TeleporterMessenger_Contract_Address_v1.0.0.txt
-        messager = new CrossChainMessager(0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf);
+        messager = new CrossChainMessager(
+            0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf
+        );
 
         vm.stopBroadcast();
     }

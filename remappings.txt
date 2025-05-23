@@ -1,0 +1,4 @@
+@openzeppelin/contracts@5.0.2/=lib/openzeppelin-contracts/contracts/
+@avalanche-icm/contracts@1.0.8/=lib/icm-contracts/contracts/
+@uniswap/v2-core/contracts@1.0.1/=lib/uniswap-v2-core/contracts/
+@uniswap/v4-core/contracts@4.0.0/=lib/uniswap-v4-core/src/

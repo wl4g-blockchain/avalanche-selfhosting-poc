@@ -1,14 +1,9 @@
 import sys
-import hashlib
 import base58
 
 def cb58_decode(cb58_str):
-    # 解码 Base58 字符串
     decoded = base58.b58decode(cb58_str)
-    
-    # 剥离校验和（最后4字节）
-    data = decoded[:-4]
-    
+    data = decoded[:-4] # Remove checksum (tail 4 bytes)
     return data
 
 if __name__ == "__main__":

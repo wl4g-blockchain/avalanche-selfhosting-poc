@@ -15,35 +15,39 @@ docker exec -ti avalanche-localnet bash
 avalanche-cli blockchain create mygames1 --evm --latest --evm-chain-id 43113001 --evm-token MYG1 --evm-defaults
 avalanche-cli blockchain create mygames2 --evm --latest --evm-chain-id 43113002 --evm-token MYG1 --evm-defaults
 
+
+avalanche-cli blockchain deploy mygames1 --local --teleporter-version v1.0.0 --relayer-version icm-relayer-v1.6.3 --icm-version v1.0.0
+avalanche-cli blockchain deploy mygames2 --local --teleporter-version v1.0.0 --relayer-version icm-relayer-v1.6.3 --icm-version v1.0.0
+
+
 avalanche-cli blockchain describe mygames1
 avalanche-cli blockchain describe mygames2
 
+
 curl -X POST --data '{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "platform.getBlockchains"
+  "jsonrpc": "2.0", "id": 1, "method": "platform.getBlockchains"
 }' -H 'content-type: application/json' http://localhost:9650/ext/bc/P
 #{"jsonrpc":"2.0","result":{"blockchains":[{"id":"YL2K4mYBGGfpopSvNihsm58jhBL8Q8ZFwkjcfRDdqggMWkF1Q","name":"mygames1","subnetID":"2W9boARgCWL25z6pMFNtkCfNA5v28VGg9PmBgUJfuKndEdhrvw","vmID":"qDNbeu87sHXfCs4PaQSN2dGdkb843nxvxg2HBj4mkfZZQE4tc"},{"id":"2Rc81C5w3jnK9c5DbV59QXtHhUVFz4i83v6av4q1VtKejAArC3","name":"mygames1","subnetID":"28gzBJwZRKmzKdHZxnzbLaiABnKMHDcq2Aoazam9mmByniXsgx","vmID":"qDNbeu87sHXfCs4PaQSN2dGdkb843nxvxg2HBj4mkfZZQE4tc"},{"id":"2PisherAdpKfiLzSVgzHePNs32sKLSx8tdLZYtd1gf9364dGRD","name":"mygames2","subnetID":"YzJJaeoVBShPGk5mKastVqVk2tBh2ZxcX2rdfYkQp42SSx6S","vmID":"qDNbeu87sHaHvNBDN8K2epBvD7WAziU1hkMFCN8zFZoicnjjy"},{"id":"5T24nSPnQ4WWiW5uC3SLYovGVRTNK9GRxXdHH5AoShGp1bR71","name":"C-Chain","subnetID":"11111111111111111111111111111111LpoYY","vmID":"mgj786NP7uDwBCcq6YwThhaN8FLyybkCa4zBWTQbNgmK6k9A6"},{"id":"2XYkjHB237QcS4SjzuZZekcpFXXQDXYdVg7zqdwURV78XQcu3C","name":"X-Chain","subnetID":"11111111111111111111111111111111LpoYY","vmID":"jvYyfQTxGMJLuGWa55kdP2p2zSUYsQ5Raupu4TW34ZAUBAbtq"}]},"id":1}
 
 
 === Operation for Demo ===
 
+export CHAIN_ID_1=43113001
+export CHAIN_ID_2=43113002
+export CHAIN_RPC_URL_1='http://127.0.0.1:38847/ext/bc/ZzzW9nfB6BRz5tCjweRMvCx4gjVkUdXsrzhLtxxgtfjQPuEwU/rpc'
+export CHAIN_RPC_URL_2='http://127.0.0.1:39713/ext/bc/2WdB4bRfkGhdCkA2KW8qgjYHek342Wm3epJfQq899BFCUPwpW4/rpc'
+
 export TEST_ACCOUNT_KEY_1="0x7bf00a22957531afd8cd99caf21c2090967a42cf2d26a03dfb55ec2dcc2ee118"
-export TEST_ACCOUNT_ADDR_1="0x9B3B36bc9Cc6a128937870714A8b856B71773914"
+export TEST_ACCOUNT_ADDR_1="0xE3264679734A5d57E3ffb29905b1db37F9E418f9"
 export TEST_ACCOUNT_KEY_2="0x35d52577ec6854a324e20dd7de5ca1e4b7c34f9b073b518b23c54857e8ee4010"
 export TEST_ACCOUNT_ADDR_2="0xf7Ba3B240C66A62deA538C8B5FbE7b081Ddf2b5F"
-export INIT_ACCOUNT_KEY_1="0x526731a64161e9f137541790145a0e83a6f1ffa93505600d05c37556dc105c48"
-export INIT_ACCOUNT_ADDR_1="0xE61Dbb187c168CB8804CCb09C163Af42Ddbd33bC"
-export INIT_ACCOUNT_KEY_2="0x2c87aa5f0e7ebfe37d235d916515662cb84908f3ebfb70507c346eebe7f5191b"
-export INIT_ACCOUNT_ADDR_2="0xB1626868bAF0ab9d0256d56a782Fc1a3F0284774"
+export INIT_ACCOUNT_KEY_1="0x5d0f00fab21bba908499c8f1e0289e48947d0542a8a5d24a1ffa01108f3d7c27"
+export INIT_ACCOUNT_ADDR_1="0xF39c9AAD5e5F474f37e88A28bd52d7E6ab03e828"
+export INIT_ACCOUNT_KEY_2="0xf98c4a6e6f1f362c880e110d9a7ade8d370d9b4ee5e087d326bae36c2d3c663d"
+export INIT_ACCOUNT_ADDR_2="0x667B0e22F4823D3c5fE0dEEf4368E1E4Ad9412C1"
 # export PRIVATE_KEY="${TEST_ACCOUNT_KEY_1}"
 export PRIVATE_KEY="${INIT_ACCOUNT_KEY_1}"
 # export PRIVATE_KEY="${INIT_ACCOUNT_KEY_2}"
-
-export CHAIN_ID_1=43113001
-export CHAIN_ID_2=43113002
-export CHAIN_RPC_URL_1='http://127.0.0.1:37845/ext/bc/2Rc81C5w3jnK9c5DbV59QXtHhUVFz4i83v6av4q1VtKejAArC3/rpc'
-export CHAIN_RPC_URL_2='http://127.0.0.1:37241/ext/bc/2PisherAdpKfiLzSVgzHePNs32sKLSx8tdLZYtd1gf9364dGRD/rpc'
 
 
 === Native Token Transfer ===
@@ -86,7 +90,7 @@ forge script script/DeployMyGamesNft.s.sol:DeployMyGamesNft --private-key ${PRIV
 #Contract Address: 0x089e8B4F937887f3726e52D7e32254AAeA19Eb4d
 
 forge script script/DeployMyGamesToken.s.sol:DeployMyGamesToken --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_1} --broadcast -vvvv
-#Contract Address: 0x4147b19c5E1ce4Fe5676318f82980E65b98beC19
+#Contract Address: 0x0551C63B4C467dd3cD7F0357660C5fa0C6dcb3D9
 
 forge script script/DeployMyGamesToken.s.sol:DeployMyGamesToken --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
 #Contract Address: 0xDEc13a4dbbeAe1404c0d4CD6fcacBF2af0d5B6AE
@@ -112,35 +116,35 @@ cast send \
 --rpc-url=${CHAIN_RPC_URL_1} \
 --chain=43113001 \
 --legacy \
-0x4147b19c5E1ce4Fe5676318f82980E65b98beC19 \
-"transfer(address,uint256)" "${TEST_ACCOUNT_ADDR_2}" 200000000000000000000
+0x0551C63B4C467dd3cD7F0357660C5fa0C6dcb3D9 \
+"transfer(address,uint256)" "${TEST_ACCOUNT_ADDR_1}" 200000000000000000000
 
 
 cast call \
 --rpc-url=${CHAIN_RPC_URL_1} \
-0x4147b19c5E1ce4Fe5676318f82980E65b98beC19 \
+0x0551C63B4C467dd3cD7F0357660C5fa0C6dcb3D9 \
 "balanceOf(address)(uint256)" \
-"${TEST_ACCOUNT_ADDR_2}"
+"${TEST_ACCOUNT_ADDR_1}"
 #200000000000000000000
 
 
 === Cross message ====
 
 forge script script/DeployCrossChainMessager.s.sol:DeployCrossChainMessager --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_1} --broadcast -vvvv
-#Contract Address: 0xAFE3a8563bd3D4D238811F55dA01d03eB664bA3f
+#Contract Address: 0x43fCeA273daAae38a25d1a1F9923271c5Fe1f7eb
 forge script script/DeployCrossChainMessager.s.sol:DeployCrossChainMessager --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
-#Contract Address: 0xc8d9297aD06812a4644A84fA457eeAF23bFEa1a7
+#Contract Address: 0xA05F7A195D2a775df69d99FB86C09BF769b76305
 
 
-## 注：为什么使用 avalanche-cli 的 teleporter 子命令测试跨链发送后，再用 cast send 命令发送跨链消息就成功了？？？
-avalanche-cli teleporter sendMsg mygames1 mygames2 "Hello 101" --destination-address 0xc8d9297aD06812a4644A84fA457eeAF23bFEa1a7 --local
+## 注：为什么使用 avalanche-cli 的 teleporter 子命令测试跨链发送后，再用 cast send 命令发送跨链消息就成功了？？？  且要触发多次？？？
+avalanche-cli teleporter sendMsg mygames1 mygames2 "Hello 101" --destination-address 0xA05F7A195D2a775df69d99FB86C09BF769b76305 --local
 
 
 cast send \
 --private-key ${INIT_ACCOUNT_KEY_1} \
 --rpc-url ${CHAIN_RPC_URL_1} \
-0xAFE3a8563bd3D4D238811F55dA01d03eB664bA3f \
-"sendTeleportMessage(bytes32,address,string)" 0xb74a02b2e99c3a9496b3d452b634ad724bb27ed67a5d4290569653b70dc24faa 0xc8d9297aD06812a4644A84fA457eeAF23bFEa1a7 "Hello 101"
+0x43fCeA273daAae38a25d1a1F9923271c5Fe1f7eb \
+"sendTeleportMessage(bytes32,address,string)" 0xc6f5d5539f833f0de1d71b020bf7ae14f01f2424abf0860d21ed63db941d883a 0xA05F7A195D2a775df69d99FB86C09BF769b76305 "Hello 101"
 
 
 # ICM-Relayer Initializing Cross chains logs:
@@ -163,5 +167,5 @@ cast send \
 
 cast call \
 --rpc-url ${CHAIN_RPC_URL_2} \
-0xc8d9297aD06812a4644A84fA457eeAF23bFEa1a7 "lastMessage()(string)"
+0xA05F7A195D2a775df69d99FB86C09BF769b76305 "lastMessage()(string)"
 #"Hello 102"

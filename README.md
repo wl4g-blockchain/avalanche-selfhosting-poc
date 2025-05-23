@@ -1,23 +1,15 @@
-# Avlanche Seft-hosting L1 chain PoC
+# Seft-hosting Avlanche L1 Chains PoC
 
-**This is [Avalanche](https://subnets.avax.network/validators/dashboard/) Self-hosting L1 chain and Cross Chain messags communication PoC projects.**
+**The [Avalanche](https://subnets.avax.network/validators/dashboard/) Self-Hosting L1 Deploy + Cross Chain Messaging / Token Transfer PoC.**
 
 ## Features
 
-- [x] Deploy ~~Tow~~ Avalanche L1s to Self-Hosting Demo VM (Debian Container).
-- [x] Deploy `MyGamesNft` contracts to Self-Hosting Avalanche L1 multi chains `MyGames1` ~~and `MyGames2`~~.
-- [x] Call `MyGamesNft` to Minted NFTs on Self-Hosting Avalanche L1 `MyGames1`.
-- [ ] Tell message to Self-Hosting Avalanche L1 `MyGames2` from `MyGames1` based on `ICM/AWM(Teleporter)`.
-- [ ] Cross transfer `MyGamesNft` or `MyGamesToken` assets to Self-Hosting Avalanche L1 `MyGames2` from Self-Hosting Avalanche L1 `MyGames1` (Planning).
+- [x] Deploy Multi Self-Hosting Avalanche L1 Chains on Container.
+- [x] Deploy the [`MyGamesNft`](./src/MyGamesNft.sol) contract to Self-Hosting Avalanche L1 Chain `MyGames1` or `MyGames2` and Mint Transfer Verification.
+- [x] Deploy the [`MyGamesToken`](./src/MyGamesToken.sol) contract to Self-Hosting Avalanche L1 Chain `MyGames1` or `MyGames2` and Transfer Verification.
+- [x] Tell messages Cross-chain to Self-hosting Avalanche L1 `MyGames2` from `MyGames1` based on the [`AWM/ICM/Teleporter`](https://github.com/ava-labs/icm-contracts/tree/main/contracts/teleporter).
+- [ ] Transfer the token [`MyGamesToken`](./src/MyGamesToken.sol) across chains to the Self-hosting Avalanche L1 `MyGames2` from `MyGames1` based on [`ICTT`](https://github.com/ava-labs/icm-contracts/tree/v1.0.8/contracts/ictt) bridge.
 
-## Quick start User Cases
+## Quick Start
 
-- [Deployment Avalanche L1 Chain-1 and Transfer Token and Mint NFT Guide](./docs/1.Deploy-L1-and-Mint-NFT-and-Transfer-Token.md)
-
-## FAQ
-
-### How to build custom Avalanche Localnet base image?
-
-```bash
-./build.sh
-```
+- [Case 1: Deployment of Avalanche L1 Chains and Mint NFT and Transfer Token and Verifyication](./docs/1.Deploy-L1-and-Mint-NFT-and-Token-Transfer.md)

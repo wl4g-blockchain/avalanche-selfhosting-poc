@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-import {ITeleporterMessenger, TeleporterMessageInput, TeleporterFeeInfo} from "icm-contracts/teleporter/ITeleporterMessenger.sol";
-import {ITeleporterReceiver} from "icm-contracts/teleporter/ITeleporterReceiver.sol";
+import {ITeleporterMessenger, TeleporterMessageInput, TeleporterFeeInfo} from "@avalanche-icm/contracts@1.0.8/teleporter/ITeleporterMessenger.sol";
+import {ITeleporterReceiver} from "@avalanche-icm/contracts@1.0.8/teleporter/ITeleporterReceiver.sol";
 
 /**
  * @title
