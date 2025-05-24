@@ -13,7 +13,7 @@ docker exec -ti avalanche-localnet bash
 
 
 avalanche-cli blockchain create mygames1 --evm --latest --evm-chain-id 43113001 --evm-token MYG1 --evm-defaults
-avalanche-cli blockchain create mygames2 --evm --latest --evm-chain-id 43113002 --evm-token MYG1 --evm-defaults
+avalanche-cli blockchain create mygames2 --evm --latest --evm-chain-id 43113002 --evm-token MYG2 --evm-defaults
 
 
 avalanche-cli blockchain deploy mygames1 --local --teleporter-version v1.0.0 --relayer-version icm-relayer-v1.6.3 --icm-version v1.0.0
@@ -34,20 +34,16 @@ curl -X POST --data '{
 
 export CHAIN_ID_1=43113001
 export CHAIN_ID_2=43113002
-export CHAIN_RPC_URL_1='http://127.0.0.1:38847/ext/bc/ZzzW9nfB6BRz5tCjweRMvCx4gjVkUdXsrzhLtxxgtfjQPuEwU/rpc'
-export CHAIN_RPC_URL_2='http://127.0.0.1:39713/ext/bc/2WdB4bRfkGhdCkA2KW8qgjYHek342Wm3epJfQq899BFCUPwpW4/rpc'
-
+export CHAIN_RPC_URL_1="http://127.0.0.1:46255/ext/bc/1MVcrRFW8QujSdebpnMsRYWLMRM1FrKi2V7Je9ivu7zwHboos/rpc"
+export CHAIN_RPC_URL_2="http://127.0.0.1:35517/ext/bc/2cE56bMf7SS5vTvdTpHAPfvxfTGryFsP7DNJNe7CwMXTRCPViZ/rpc"
 export TEST_ACCOUNT_KEY_1="0x7bf00a22957531afd8cd99caf21c2090967a42cf2d26a03dfb55ec2dcc2ee118"
 export TEST_ACCOUNT_ADDR_1="0xE3264679734A5d57E3ffb29905b1db37F9E418f9"
 export TEST_ACCOUNT_KEY_2="0x35d52577ec6854a324e20dd7de5ca1e4b7c34f9b073b518b23c54857e8ee4010"
 export TEST_ACCOUNT_ADDR_2="0xf7Ba3B240C66A62deA538C8B5FbE7b081Ddf2b5F"
-export INIT_ACCOUNT_KEY_1="0x5d0f00fab21bba908499c8f1e0289e48947d0542a8a5d24a1ffa01108f3d7c27"
-export INIT_ACCOUNT_ADDR_1="0xF39c9AAD5e5F474f37e88A28bd52d7E6ab03e828"
-export INIT_ACCOUNT_KEY_2="0xf98c4a6e6f1f362c880e110d9a7ade8d370d9b4ee5e087d326bae36c2d3c663d"
-export INIT_ACCOUNT_ADDR_2="0x667B0e22F4823D3c5fE0dEEf4368E1E4Ad9412C1"
-# export PRIVATE_KEY="${TEST_ACCOUNT_KEY_1}"
-export PRIVATE_KEY="${INIT_ACCOUNT_KEY_1}"
-# export PRIVATE_KEY="${INIT_ACCOUNT_KEY_2}"
+export INIT_ACCOUNT_KEY_1="0xc422374747ed86d3f3e3d977967128965ba51a47b5ec198d05dff328120dc1d4"
+export INIT_ACCOUNT_ADDR_1="0x104A729Ec7B7B1Ecc9933a14Dfad92BAB1218c64"
+export INIT_ACCOUNT_KEY_2="0x1e324869565ffe00af3f64d0cb9f7f18903699b3c62f3dc4556cc41e8852cfeb"
+export INIT_ACCOUNT_ADDR_2="0x97D49A1589D44A3aCCf327Fb6d42a5E3345FB698"
 
 
 === Native Token Transfer ===
@@ -63,7 +59,6 @@ ${TEST_ACCOUNT_ADDR_1}
 cast balance \
 --rpc-url ${CHAIN_RPC_URL_1} \
 ${TEST_ACCOUNT_ADDR_1}
-
 
 
 cast send \
@@ -82,69 +77,85 @@ ${TEST_ACCOUNT_ADDR_2}
 
 === Deploy Contract ===
 
+export PRIVATE_KEY="${INIT_ACCOUNT_KEY_1}"
 
 forge script script/DeployMyGamesNft.s.sol:DeployMyGamesNft --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_1} --broadcast -vvvv
-#Contract Address: 0x8f6cbDEbBd47A0cbEF61d311aD46Be184772a483
-
-forge script script/DeployMyGamesNft.s.sol:DeployMyGamesNft --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
-#Contract Address: 0x089e8B4F937887f3726e52D7e32254AAeA19Eb4d
+export MYGAMES_NFT_ADDR_1="0x8E544f45f0A9bcEf113a6B707f5015d099a96ECe"
 
 forge script script/DeployMyGamesToken.s.sol:DeployMyGamesToken --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_1} --broadcast -vvvv
-#Contract Address: 0x0551C63B4C467dd3cD7F0357660C5fa0C6dcb3D9
+export MYGAMES_TOKEN_ADDR_1="0x26BB8135E9C1979da193ab324cb5ecBA4A97cff3"
+
+export PRIVATE_KEY="${INIT_ACCOUNT_KEY_2}"
+
+forge script script/DeployMyGamesNft.s.sol:DeployMyGamesNft --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
+export MYGAMES_NFT_ADDR_2="0x14D4b67ffE1F8b838f91f5578E2e2Ef4eAc58AE3"
 
 forge script script/DeployMyGamesToken.s.sol:DeployMyGamesToken --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
-#Contract Address: 0xDEc13a4dbbeAe1404c0d4CD6fcacBF2af0d5B6AE
+export MYGAMES_TOKEN_ADDR_2="0x6E11c8B47CC5a9C2af8365B88F28DdDF93674FF4"
 
 
 
-=== Mint NFT ====
+=== Mint NFTs ====
 
 cast send \
---private-key=${PRIVATE_KEY} \
+--private-key=${INIT_ACCOUNT_KEY_1} \
 --rpc-url=${CHAIN_RPC_URL_1} \
 --chain=43113001 \
 --legacy \
-0x8f6cbDEbBd47A0cbEF61d311aD46Be184772a483 \
+${MYGAMES_NFT_ADDR_1} \
 "mint(address)" "${TEST_ACCOUNT_ADDR_1}"
 
+
+cast call \
+--rpc-url=${CHAIN_RPC_URL_1} \
+${MYGAMES_NFT_ADDR_1} \
+"balanceOf(address)(uint256)" "${TEST_ACCOUNT_ADDR_1}"
 
 
 === Transfer ERC20 Token ===
 
 cast send \
---private-key=${PRIVATE_KEY} \
+--private-key=${INIT_ACCOUNT_KEY_1} \
 --rpc-url=${CHAIN_RPC_URL_1} \
 --chain=43113001 \
 --legacy \
-0x0551C63B4C467dd3cD7F0357660C5fa0C6dcb3D9 \
-"transfer(address,uint256)" "${TEST_ACCOUNT_ADDR_1}" 200000000000000000000
+${MYGAMES_TOKEN_ADDR_1} \
+"transfer(address,uint256)" "${TEST_ACCOUNT_ADDR_1}" 8000000000000000000000
 
 
 cast call \
 --rpc-url=${CHAIN_RPC_URL_1} \
-0x0551C63B4C467dd3cD7F0357660C5fa0C6dcb3D9 \
+${MYGAMES_TOKEN_ADDR_1} \
 "balanceOf(address)(uint256)" \
 "${TEST_ACCOUNT_ADDR_1}"
-#200000000000000000000
+#8000000000000000000000
 
 
-=== Cross message ====
+=== Cross chain messages ====
 
+export PRIVATE_KEY="${INIT_ACCOUNT_KEY_1}"
 forge script script/DeployCrossChainMessager.s.sol:DeployCrossChainMessager --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_1} --broadcast -vvvv
-#Contract Address: 0x43fCeA273daAae38a25d1a1F9923271c5Fe1f7eb
+
+export MYGAMES_MESSAGER_ADDR_1="0x376787dBa2a4647D83483F2e25855637F9b4D94a"
+
+
+export PRIVATE_KEY="${INIT_ACCOUNT_KEY_2}"
 forge script script/DeployCrossChainMessager.s.sol:DeployCrossChainMessager --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
-#Contract Address: 0xA05F7A195D2a775df69d99FB86C09BF769b76305
+
+export MYGAMES_MESSAGER_ADDR_2="0x832409Ea5f1ed53633e789B84FE77c1a9cD61FA8"
 
 
 ## 注：为什么使用 avalanche-cli 的 teleporter 子命令测试跨链发送后，再用 cast send 命令发送跨链消息就成功了？？？  且要触发多次？？？
-avalanche-cli teleporter sendMsg mygames1 mygames2 "Hello 101" --destination-address 0xA05F7A195D2a775df69d99FB86C09BF769b76305 --local
+avalanche-cli teleporter sendMsg mygames1 mygames2 "Hello 101" --destination-address "${MYGAMES_MESSAGER_ADDR_2}" --local
 
 
+export CHAIN_ID_HEX_2="0xd3adf89911adb4fd1574248d5b9a4f80034de192c6f7e01036e47c28d1cff325"
 cast send \
 --private-key ${INIT_ACCOUNT_KEY_1} \
 --rpc-url ${CHAIN_RPC_URL_1} \
-0x43fCeA273daAae38a25d1a1F9923271c5Fe1f7eb \
-"sendTeleportMessage(bytes32,address,string)" 0xc6f5d5539f833f0de1d71b020bf7ae14f01f2424abf0860d21ed63db941d883a 0xA05F7A195D2a775df69d99FB86C09BF769b76305 "Hello 101"
+${MYGAMES_MESSAGER_ADDR_1} \
+"sendTeleportMessage(bytes32,address,string)" \
+"${CHAIN_ID_HEX_2}" "${MYGAMES_MESSAGER_ADDR_2}" "Hello 101"
 
 
 # ICM-Relayer Initializing Cross chains logs:
@@ -167,5 +178,111 @@ cast send \
 
 cast call \
 --rpc-url ${CHAIN_RPC_URL_2} \
-0xA05F7A195D2a775df69d99FB86C09BF769b76305 "lastMessage()(string)"
+"${MYGAMES_MESSAGER_ADDR_2}" "lastMessage()(string)"
 #"Hello 102"
+
+
+
+
+=== Cross chain tokens ====
+
+export PRIVATE_KEY="${INIT_ACCOUNT_KEY_1}"
+forge script script/crosschaintoken/DeploySimpleERC20Bridge.s.sol:DeploySimpleERC20Bridge --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_1} --broadcast -vvvv
+
+export MYGAMES_SIMPLE_BRIDGE_ADDR_1="0x4eD12cd8394708a8f2bd011F7db73AC715719d86"
+
+export PRIVATE_KEY="${INIT_ACCOUNT_KEY_2}"
+forge script script/crosschaintoken/DeploySimpleERC20Bridge.s.sol:DeploySimpleERC20Bridge --private-key ${PRIVATE_KEY} --rpc-url ${CHAIN_RPC_URL_2} --broadcast -vvvv
+
+export MYGAMES_SIMPLE_BRIDGE_ADDR_2="0x4facC87BDe23b6E699768695A9DCD977eecad209"
+
+
+# 跨链转账前，可先下检查 TEST_ACCOUNT_ADDR_1 on source chain 上 token 的余额, 之后跨链转账时将会 lock 资金
+cast call \
+--rpc-url=${CHAIN_RPC_URL_1} \
+${MYGAMES_TOKEN_ADDR_1} \
+"balanceOf(address)(uint256)" \
+"${TEST_ACCOUNT_ADDR_1}"
+
+
+# 先检查 SimpleERC20Bridge 合约在 token on destination chain 的流动性余额充足, 因为自动执行 receiveTeleporterMessage() 和 mint() 时,
+# 需要自己的 token on destination chain 的余额转移给 TEST_ACCOUNT_ADDR_1 on destination chain (这样同样的地址就在 destination chain 的 token 铸造了余额, 即完成了跨链交易)
+cast call \
+--rpc-url=${CHAIN_RPC_URL_2} \
+${MYGAMES_TOKEN_ADDR_2} \
+"balanceOf(address)(uint256)" \
+"${MYGAMES_SIMPLE_BRIDGE_ADDR_2}"
+
+
+# Firstly we are need to approve the token transfer
+cast send \
+--rpc-url=${CHAIN_RPC_URL_1} \
+--private-key=${TEST_ACCOUNT_KEY_1} \
+${MYGAMES_TOKEN_ADDR_1} \
+"approve(address,uint256)(bool)" \
+${MYGAMES_SIMPLE_BRIDGE_ADDR_1} \
+200000000000000000000
+
+
+export CHAIN_ID_HEX_2="0xd3adf89911adb4fd1574248d5b9a4f80034de192c6f7e01036e47c28d1cff325"
+cast send \
+--rpc-url ${CHAIN_RPC_URL_1} \
+--private-key ${TEST_ACCOUNT_KEY_1} \
+${MYGAMES_SIMPLE_BRIDGE_ADDR_1} \
+"sendERC20WithICM(bytes32,address,address,address,uint256,string)" \
+"${CHAIN_ID_HEX_2}" "${MYGAMES_SIMPLE_BRIDGE_ADDR_2}" "${MYGAMES_TOKEN_ADDR_1}" "${MYGAMES_TOKEN_ADDR_2}" 200000000000000000000 "Hello 101"
+
+
+cast call \
+--rpc-url ${CHAIN_RPC_URL_2} \
+"${MYGAMES_SIMPLE_BRIDGE_ADDR_2}" "lastSwapOriginSenderAddress()(address)"
+#0x4eD12cd8394708a8f2bd011F7db73AC715719d86
+
+cast call \
+--rpc-url ${CHAIN_RPC_URL_2} \
+"${MYGAMES_SIMPLE_BRIDGE_ADDR_2}" "lastSwapAmount()(uint256)"
+#200000000000000000000
+
+cast call \
+--rpc-url ${CHAIN_RPC_URL_2} \
+"${MYGAMES_SIMPLE_BRIDGE_ADDR_2}" "lastSwapRemark()(string)"
+#"Hello 101"
+
+
+
+
+
+
+
+
+
+======== tmp debug ====
+
+===== 要先将 INIT_ACCOUNT_KEY_2 的资金从 token contract on chain2 转给 bridge contract on chain2，
+===== 因为 IERC20(destinationTokenAddress).transfer(to,amount) 时, 它才是 msg.sender
+
+cast send \
+--private-key=${INIT_ACCOUNT_KEY_2} \
+--rpc-url=${CHAIN_RPC_URL_2} \
+--chain=43113002 \
+--legacy \
+${MYGAMES_TOKEN_ADDR_2} \
+"transfer(address,uint256)" "${MYGAMES_SIMPLE_BRIDGE_ADDR_2}" 8000000000000000000000
+
+
+cast send \
+--rpc-url ${CHAIN_RPC_URL_2} \
+--private-key ${TEST_ACCOUNT_KEY_2} \
+${MYGAMES_SIMPLE_BRIDGE_ADDR_2} \
+"_mintToken(address,address,uint256,string)" \
+"${MYGAMES_TOKEN_ADDR_2}" "${TEST_ACCOUNT_ADDR_1}" 200000000000000000000 "Hello 101"
+
+
+cast send \
+--private-key=${TEST_ACCOUNT_KEY_2} \
+--rpc-url=${CHAIN_RPC_URL_2} \
+--chain=43113002 \
+--legacy \
+${MYGAMES_TOKEN_ADDR_2} \
+"transfer(address,uint256)" "${TEST_ACCOUNT_ADDR_1}" 200000000000000000000
+
