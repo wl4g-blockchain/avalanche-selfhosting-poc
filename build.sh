@@ -23,7 +23,7 @@ set -e
 
 BASE_DIR="$(cd "`dirname $0`"/../; pwd)"
 # If run.sh is a soft link, it is considered to be $PROJECT_HOME/run.sh, no need to call back the path.
-if [ -L "`dirname $0`/run.sh" ]; then
+if [ -L "`dirname $0`/build.sh" ]; then
   BASE_DIR="$(cd "`dirname $0`"; pwd)"
 fi
 

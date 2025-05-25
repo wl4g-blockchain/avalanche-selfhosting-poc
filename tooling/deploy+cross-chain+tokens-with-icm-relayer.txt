@@ -36,10 +36,12 @@ export CHAIN_ID_1=43113001
 export CHAIN_ID_2=43113002
 export CHAIN_RPC_URL_1="http://127.0.0.1:46255/ext/bc/1MVcrRFW8QujSdebpnMsRYWLMRM1FrKi2V7Je9ivu7zwHboos/rpc"
 export CHAIN_RPC_URL_2="http://127.0.0.1:35517/ext/bc/2cE56bMf7SS5vTvdTpHAPfvxfTGryFsP7DNJNe7CwMXTRCPViZ/rpc"
+# Own Test EOA accounts created on Metamask
 export TEST_ACCOUNT_KEY_1="0x7bf00a22957531afd8cd99caf21c2090967a42cf2d26a03dfb55ec2dcc2ee118"
 export TEST_ACCOUNT_ADDR_1="0xE3264679734A5d57E3ffb29905b1db37F9E418f9"
 export TEST_ACCOUNT_KEY_2="0x35d52577ec6854a324e20dd7de5ca1e4b7c34f9b073b518b23c54857e8ee4010"
 export TEST_ACCOUNT_ADDR_2="0xf7Ba3B240C66A62deA538C8B5FbE7b081Ddf2b5F"
+# Pre-funding Initial EOA accounts created by Avalanche
 export INIT_ACCOUNT_KEY_1="0xc422374747ed86d3f3e3d977967128965ba51a47b5ec198d05dff328120dc1d4"
 export INIT_ACCOUNT_ADDR_1="0x104A729Ec7B7B1Ecc9933a14Dfad92BAB1218c64"
 export INIT_ACCOUNT_KEY_2="0x1e324869565ffe00af3f64d0cb9f7f18903699b3c62f3dc4556cc41e8852cfeb"
@@ -98,8 +100,8 @@ export MYGAMES_TOKEN_ADDR_2="0x6E11c8B47CC5a9C2af8365B88F28DdDF93674FF4"
 === Mint NFTs ====
 
 cast send \
---private-key=${INIT_ACCOUNT_KEY_1} \
 --rpc-url=${CHAIN_RPC_URL_1} \
+--private-key=${INIT_ACCOUNT_KEY_1} \
 --chain=43113001 \
 --legacy \
 ${MYGAMES_NFT_ADDR_1} \
@@ -197,7 +199,7 @@ forge script script/crosschaintoken/DeploySimpleERC20Bridge.s.sol:DeploySimpleER
 export MYGAMES_SIMPLE_BRIDGE_ADDR_2="0x4facC87BDe23b6E699768695A9DCD977eecad209"
 
 
-# 跨链转账前，可先下检查 TEST_ACCOUNT_ADDR_1 on source chain 上 token 的余额, 之后跨链转账时将会 lock 资金
+# 在跨链转账前，我们可以首先检查一下 {TEST_ACCOUNT_ADDR_1} chain 1 上的 ERC20 Token 余额, 因为在之后一旦跨链转账成功，我们将看到期望效果，即 lock 了 amount 资金
 cast call \
 --rpc-url=${CHAIN_RPC_URL_1} \
 ${MYGAMES_TOKEN_ADDR_1} \
@@ -205,8 +207,9 @@ ${MYGAMES_TOKEN_ADDR_1} \
 "${TEST_ACCOUNT_ADDR_1}"
 
 
-# 先检查 SimpleERC20Bridge 合约在 token on destination chain 的流动性余额充足, 因为自动执行 receiveTeleporterMessage() 和 mint() 时,
-# 需要自己的 token on destination chain 的余额转移给 TEST_ACCOUNT_ADDR_1 on destination chain (这样同样的地址就在 destination chain 的 token 铸造了余额, 即完成了跨链交易)
+# 先检查 SimpleERC20Bridge 合约地址在 chain 2 拥有的 ERC20 Token 流动性(池)余额是否充足,
+# 否则，之后执行跨链交易时，即因为 receiveTeleporterMessage() 中无法转账给 {TEST_ACCOUNT_ADDR_1} 即，为他铸造 Token 而失败
+# 如果跨链转账成功，我们将看到 {TEST_ACCOUNT_ADDR_1} 地址也会在 chain 2 的 token 余额会增加 amount
 cast call \
 --rpc-url=${CHAIN_RPC_URL_2} \
 ${MYGAMES_TOKEN_ADDR_2} \
@@ -256,7 +259,7 @@ cast call \
 
 
 
-======== tmp debug ====
+=========== tmp debug ==============
 
 ===== 要先将 INIT_ACCOUNT_KEY_2 的资金从 token contract on chain2 转给 bridge contract on chain2，
 ===== 因为 IERC20(destinationTokenAddress).transfer(to,amount) 时, 它才是 msg.sender
@@ -286,3 +289,9 @@ cast send \
 ${MYGAMES_TOKEN_ADDR_2} \
 "transfer(address,uint256)" "${TEST_ACCOUNT_ADDR_1}" 200000000000000000000
 
+
+
+
+========== TODO ===========
+
+- [ ] Transfer the token [`MyGamesToken`](./src/MyGamesToken.sol) across chains to the Self-hosting Avalanche L1 `MyGames2` from `MyGames1` based on [`ICTT`](https://github.com/ava-labs/icm-contracts/tree/v1.0.8/contracts/ictt) bridge.

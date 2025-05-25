@@ -5,11 +5,15 @@
 ## Features
 
 - [x] Deploy Multi Self-Hosting Avalanche L1 Chains on Container.
-- [x] Deploy the [`MyGamesNft`](./src/MyGamesNft.sol) contract to Self-Hosting Avalanche L1 Chain `MyGames1` or `MyGames2` and Mint Transfer Verification.
-- [x] Deploy the [`MyGamesToken`](./src/MyGamesToken.sol) contract to Self-Hosting Avalanche L1 Chain `MyGames1` or `MyGames2` and Transfer Verification.
-- [x] Tell messages Cross-chain to Self-hosting Avalanche L1 `MyGames2` from `MyGames1` based on the [`AWM/ICM/Teleporter`](https://github.com/ava-labs/icm-contracts/tree/main/contracts/teleporter).
-- [ ] Transfer the token [`MyGamesToken`](./src/MyGamesToken.sol) across chains to the Self-hosting Avalanche L1 `MyGames2` from `MyGames1` based on [`ICTT`](https://github.com/ava-labs/icm-contracts/tree/v1.0.8/contracts/ictt) bridge.
+- [x] Transfer native tokens from multi self-hosting Avalanche L1 chains and view balances in Metamask.
+- [x] Deploy the [`MyGamesNft`](./src/MyGamesNft.sol) contract to Self-Hosting Avalanche L1 Chain `MyGames1` and Mint Transfer Verification.
+- [x] Deploy the [`MyGamesToken`](./src/MyGamesToken.sol) contract to Self-Hosting Avalanche L1 Multi Chain `MyGames1` and `MyGames2` and Transfer Verification.
+- [x] Transfer ERC20 tokens from `MyGames1` **Cross-chain** to self-hosted Avalanche L1 `MyGames2` based on [`AWM/ICM/Teleporter`](https://github.com/ava-labs/icm-contracts/tree/main/contracts/teleporter).
+
+## Architecture of Cross-Chain Messaging / Token Transfer
+
+![Alt text](docs/shots/Architecture-of-Simple-Cross-Chain-Token-Transfer.svg)
 
 ## Quick Start
 
-- [Case 1: Deployment of Avalanche L1 Chains and Mint NFT and Transfer Token and Verifyication](./docs/1.Deploy-L1-and-Mint-NFT-and-Token-Transfer.md)
+- [Deployment of Avalanche L1 Multi Chains + Mint NFT + ERC20 Token Cross-Chain Bridge Transfer](./docs/1.Deploy-L1+Mint-NFT+ERC20+CrossChain-Bridge-Transfer.md)
