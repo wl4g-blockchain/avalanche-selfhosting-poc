@@ -16,4 +16,4 @@
 
 ## Quick Start
 
-- [Deployment of Avalanche L1 Multi Chains + Mint NFT + ERC20 Token Cross-Chain Bridge Transfer](./docs/1.Deploy-L1+Mint-NFT+ERC20+CrossChain-Bridge-Transfer.md)
+- [Deployment of Avalanche L1 Multi Chains + Mint NFT + ERC20 Token Cross-Chain Bridge Transfer](./docs/1.Deploy-L1+Mint-NFT+ERC20+CrossChain-Bridge-Transfer.md) and [Tutorial Video on Bilibili is here](https://www.bilibili.com/video/BV1WTjDzBEG8/)
